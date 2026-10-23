@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Alienware Control Center
+Comment=Safe thermal and fan telemetry for Alienware laptops
+Exec=alienware-control-center
+Icon=computer-symbolic
+Terminal=false
+Type=Application
+Categories=System;Monitor;
+Keywords=Alienware;thermal;fan;temperature;

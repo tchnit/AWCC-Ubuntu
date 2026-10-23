@@ -1,0 +1,37 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+build/
+dist/
+*.whl
+
+# Local credentials, logs, and temporary output
+.env
+.env.*
+*.log
+*.jsonl
+*.swp
+*.bak
+.DS_Store
+
+# Local hardware evidence and archived copies; source tests do not need them.
+research/results/
+research/sources/ubuntu-hwe-7.0/linux-hwe-7.0.*
+
+# Kernel build products (retain C sources, patches and Makefiles).
+*.ko
+*.o
+*.mod
+*.mod.c
+.*.cmd
+Module.symvers
+modules.order
+.tmp_versions/

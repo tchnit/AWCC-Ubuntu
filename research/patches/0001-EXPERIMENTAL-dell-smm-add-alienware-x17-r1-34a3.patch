@@ -1,0 +1,29 @@
+From: Alienware Control Center for Linux research
+Subject: [RFC DO NOT MERGE] hwmon: (dell-smm) add experimental x17 R1 fan control
+
+This is an offline research candidate only. The 0x34a3/0x35a3 pair has not
+been verified on the target machine. Do not submit or load without a controlled
+hardware test and a confirmed recovery path.
+
+An independent x17 R1 boot log shows dell-bios-fan-control being executed; the
+published source of that utility uses 0x34a3/0x35a3. However, that utility
+ignores the SMM return status and always prints success, so this is evidence of
+an attempted command only, not proof that the firmware accepted it.
+
+--- a/drivers/hwmon/dell-smm-hwmon.c
++++ b/drivers/hwmon/dell-smm-hwmon.c
+@@ -1549,6 +1549,14 @@ static const struct i8k_fan_control_data i8k_fan_control_data[] __initconst = {
+ };
+ 
+ static const struct dmi_system_id i8k_whitelist_fan_control[] __initconst = {
++	{
++		.ident = "Alienware x17 R1 (experimental)",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Alienware"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Alienware x17 R1"),
++		},
++		.driver_data = (void *)&i8k_fan_control_data[I8K_FAN_34A3_35A3],
++	},
+ 	{
+ 		.ident = "Dell G5 5505",
+ 		.matches = {

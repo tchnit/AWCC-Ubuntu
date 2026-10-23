@@ -1,0 +1,34 @@
+--- a/alienware-wmi-wmax.c
++++ b/alienware-wmi-wmax.c
+@@ -618,8 +618,32 @@
+ 			    struct wmax_u32_args *args, u32 *out)
+ {
+ 	int ret;
++	bool diagnose = method_id == AWCC_METHOD_GAME_SHIFT_STATUS ||
++		(method_id == AWCC_METHOD_THERMAL_CONTROL &&
++		 args->operation == AWCC_OP_ACTIVATE_PROFILE);
++	const char *stage = method_id == AWCC_METHOD_GAME_SHIFT_STATUS ?
++		(args->operation == AWCC_OP_GET_GAME_SHIFT_STATUS ?
++		 "game-shift-query" : "game-shift-toggle") : "profile-activate";
++
++	/* Logging only: no extra WMI calls and no error suppression/fallback. */
++	if (diagnose)
++		dev_info_ratelimited(&wdev->dev,
++			"AWCC_DIAG enter stage=%s method=0x%02x op=0x%02x args=%02x/%02x/%02x\n",
++			stage, method_id, args->operation, args->arg1, args->arg2, args->arg3);
+ 
+ 	ret = alienware_wmi_command(wdev, method_id, args, sizeof(*args), out);
++	if (diagnose) {
++		if (ret)
++			dev_info_ratelimited(&wdev->dev,
++				"AWCC_DIAG exit stage=%s transport_errno=%d raw=unavailable\n",
++				stage, ret);
++		else
++			dev_info_ratelimited(&wdev->dev,
++				"AWCC_DIAG exit stage=%s raw=0x%08x mapped_errno=%d\n",
++				stage, *out,
++				(*out == AWCC_FAILURE_CODE || *out == AWCC_FAILURE_CODE_2) ?
++				-EBADRQC : 0);
++	}
+	if (ret)
+		return ret;

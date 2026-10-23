@@ -1,0 +1,22 @@
+--- a/alienware-wmi-wmax.c
++++ b/alienware-wmi-wmax.c
+@@ -21,6 +21,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/platform_profile.h>
+ #include <linux/pm.h>
++#include <linux/sched.h>
+ #include <linux/seq_file.h>
+ #include <linux/units.h>
+ #include <linux/wmi.h>
+@@ -1292,6 +1293,11 @@
+ {
+ 	struct awcc_priv *priv = dev_get_drvdata(dev);
+ 
++	dev_info_ratelimited(&priv->wdev->dev,
++		"AWCC_ATTRIB setter pid=%d comm=%s profile=%u profile_id=0x%02x\n",
++		task_pid_nr(current), current->comm, profile,
++		priv->supported_profiles[profile]);
++
+ 	if (awcc->gmode) {
+ 		u32 gmode_status;
+ 		int ret;

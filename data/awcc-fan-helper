@@ -1,0 +1,8 @@
+#!/usr/bin/python3 -I
+import sys
+
+sys.path.insert(0, "/usr/lib/alienware-control-center")
+
+from awcc_linux.fan_helper import main
+
+raise SystemExit(main())
